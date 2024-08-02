@@ -1,0 +1,23 @@
+div.main {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #E0E0E0;
+    align-items: center;
+    
+}
+
+.main .school {
+    margin-bottom: 10px;
+}
+
+.main .school button {
+    width: 400px;
+    height: 80px;
+    padding: 10px;
+    text-align: center;
+    background-color: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+}

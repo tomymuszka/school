@@ -1,0 +1,23 @@
+.photo-container {
+    width: 100%; /* Ajusta el ancho según necesites */
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .photo-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .photo {
+    display: block; /* Asegura que cada imagen ocupe su propia línea */
+    max-width: 100%; /* Hace las imágenes responsivas */
+    height: auto; /* Mantiene la proporción de las imágenes */
+    margin: 10px auto; /* Centra las imágenes y añade espacio entre ellas */
+  }
+  
+  img.photo{
+    width: 80% !important;
+  }

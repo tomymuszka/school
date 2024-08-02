@@ -1,0 +1,35 @@
+.instructions-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+  }
+  
+  .instructions-container h1 {
+    color: #333;
+    text-align: center;
+  }
+  
+  .instructions-container p, .instructions-container ul {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+  }
+  
+  .instructions-container ul {
+    margin-left: 20px;
+  }
+  
+  .instructions-container img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+  }
+
+ .instructions-container img{
+    width: 100% !important
+  }
