@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateGradeDto } from './dto/create-grade.dto';
 import { UpdateGradeDto } from './dto/update-grade.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,68 +13,75 @@ import { School } from 'src/school/entities/school.entity';
 
 @Injectable()
 export class GradeService {
-  private readonly logger = new Logger('gradeService')
+  private readonly logger = new Logger('gradeService');
 
   constructor(
     @InjectRepository(Grade)
-    private readonly gradeRepository:Repository<Grade>,
+    private readonly gradeRepository: Repository<Grade>,
     @InjectRepository(School)
-    private readonly schoolRepository:Repository<School>
-  ){}
+    private readonly schoolRepository: Repository<School>,
+  ) {}
 
   async create(createGradeDto: CreateGradeDto) {
-    const{ schoolId, ...gradeData} = createGradeDto
+    const { schoolId, ...gradeData } = createGradeDto;
 
-    const school = await this.schoolRepository.findOneBy({id:schoolId})
-    if(!school) throw new NotFoundException(`School with id ${schoolId} not found`)
+    const school = await this.schoolRepository.findOneBy({ id: schoolId });
+    if (!school)
+      throw new NotFoundException(`School with id ${schoolId} not found`);
 
     const grade = this.gradeRepository.create({
       school,
-      ...gradeData
-    })
+      ...gradeData,
+    });
     try {
-      await this.gradeRepository.save(grade)
+      await this.gradeRepository.save(grade);
       return {
-        id:grade.id,
-        name:grade.name,
-        created_at:grade.created_at,
-        school: schoolId
-      }
+        id: grade.id,
+        name: grade.name,
+        created_at: grade.created_at,
+        school: schoolId,
+      };
     } catch (error) {
-    this.hableDBExeptions(error)
+      this.hableDBExeptions(error);
     }
   }
 
-  findAll() {
-    return this.gradeRepository.find()
+  async findAllBySchoolId(schoolId: number): Promise<Grade[]> {
+    return await this.gradeRepository.find({
+      where: {
+        school: { id: schoolId }, // Correcta forma de referencia a la relación
+      },
+      relations: ['school', 'subjects'], // Carga también las relaciones si es necesario
+    });
   }
 
   async findOne(id: number) {
-    const grade = await this.gradeRepository.findBy({id})
-    if(!grade) throw new NotFoundException(`Grade with id ${id} not found`)
-    return grade
-    }
+    const grade = await this.gradeRepository.findBy({ id });
+    if (!grade) throw new NotFoundException(`Grade with id ${id} not found`);
+    return grade;
+  }
 
   async update(id: number, updateGradeDto: UpdateGradeDto) {
-    const { schoolId, ...gradeData} = updateGradeDto
+    const { schoolId, ...gradeData } = updateGradeDto;
 
-    const gradeUpdate = await this.gradeRepository.findOneBy({id})
-    if(!gradeUpdate) throw new NotFoundException(`Grade with id ${id} not found`)
+    const gradeUpdate = await this.gradeRepository.findOneBy({ id });
+    if (!gradeUpdate)
+      throw new NotFoundException(`Grade with id ${id} not found`);
 
-    if(schoolId){
-    const school = await this.schoolRepository.findOneBy({id:schoolId})
-    if(!school) throw new NotFoundException(`School with id ${schoolId} not found`)
-    gradeUpdate.school = school
+    if (schoolId) {
+      const school = await this.schoolRepository.findOneBy({ id: schoolId });
+      if (!school)
+        throw new NotFoundException(`School with id ${schoolId} not found`);
+      gradeUpdate.school = school;
     }
 
-    Object.assign(gradeUpdate, gradeData)
+    Object.assign(gradeUpdate, gradeData);
 
     try {
-      await this.gradeRepository.save(gradeUpdate)
-      return gradeUpdate
-      
+      await this.gradeRepository.save(gradeUpdate);
+      return gradeUpdate;
     } catch (error) {
-      this.hableDBExeptions(error)
+      this.hableDBExeptions(error);
     }
   }
 
@@ -77,8 +89,8 @@ export class GradeService {
     return `This action removes a #${id} grade`;
   }
 
-  private hableDBExeptions(error:any){
-    this.logger.error(error)
-    throw new InternalServerErrorException('Unkwon error, check server logs')
+  private hableDBExeptions(error: any) {
+    this.logger.error(error);
+    throw new InternalServerErrorException('Unkwon error, check server logs');
   }
 }

@@ -1,13 +1,21 @@
 import { Grade } from '../pages/grade/grade';
 import axiosInstance from './axiosInstance';
 
-export const fetchGrade = async ():Promise<Grade[]> => {
+export const fetchGrade = async (schoolId: number): Promise<Grade[]> => {
   try {
-    const response = await axiosInstance.get('/grade');
+    const response = await axiosInstance.get(`/grade/school/${schoolId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching grades:', error);
     throw error;
+  }
+};
+
+export const createGrade = async (name: string, schoolId: number) => {
+  try {
+    await axiosInstance.post('/grade', { name, schoolId });
+  } catch (error) {
+    console.log(error);
   }
 };
 

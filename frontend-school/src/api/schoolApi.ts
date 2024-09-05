@@ -11,6 +11,14 @@ export const fetchSchool = async (): Promise<School[]> => {
   }
 };
 
+export const createSchool = async (name: string) => {
+  try {
+    await axiosInstance.post('/school', { name });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // export const createUser = async (userData) => {
 //   try {
 //     const response = await axiosInstance.post('/users', userData);
